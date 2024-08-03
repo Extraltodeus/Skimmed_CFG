@@ -6,10 +6,15 @@ CFG below at: 6/8/12/16/24/32, skimming scale at 6
 ![6_8_12_16_24_32](https://github.com/user-attachments/assets/6eb4beb6-0579-4f3e-a85e-e23b6472ebae)
 
 
-Simply plug after the model loader:
+Simply plug after the model loader (same for all the fours nodes):
 
 ![image](https://github.com/user-attachments/assets/b188947c-6226-42ff-b868-e6a44bbfe590)
 
+nodes: 
+- Skimmed CFG: My version first version of this, works like a charm!
+- Skimmed CFG - replace: replace the values within the negative by those in the positive prediction, nullifying the effect.
+- Skimmed CFG - linear interpolation: instead of replacing, does a linear interpolation in between the values. Highly recommanded!
+- Skimmed CFG - linear interpolation dual scales: Two scales. One named "positive" and one.. well "negative". The name is more related to a visualy intuitive relation rather than fully from the predictions. A higher positive will tend to go towards high saturations and vice versa with the other slider.
 
 Side-effects:
 
