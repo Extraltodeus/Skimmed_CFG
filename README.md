@@ -62,6 +62,10 @@ While the code is too much of a mess to be shared, I do expose and share my mode
 
 ![00416UI_00001_](https://github.com/user-attachments/assets/f51365fa-9553-43a1-a060-e2b545b1dc74)
 
+### Linear interpolation scale 5
+
+![00407UI_00001_](https://github.com/user-attachments/assets/ead094fd-a74c-4722-a393-63a9bf738b10)
+
 ### Replace
 
 ![00405UI_00001_](https://github.com/user-attachments/assets/8c14a7a7-6b04-4d4b-9264-4651b3134186)
