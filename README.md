@@ -24,7 +24,7 @@ Tips:
 - The skimming scale is basically how much do you like them burned. 3 was the intended scale but suit to your needs.
 - SDE samplers can still burn a little but much less
 - A too low skimming scale may require to do more steps
-- Recommanded skim: 2-3 for maximum antiburn, 5-7 for colorful/strong style.
+- Recommanded skim: 2-3 for maximum antiburn, 5-7 for colorful/strong style. 4 is cruise scale.
 - a good negative prompt is a style negative prompt
 
 
