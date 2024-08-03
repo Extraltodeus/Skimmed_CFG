@@ -16,3 +16,13 @@ Tips:
 - SDE samplers can still burn a little but much less
 - A too low skimming scale may require to do more steps
 - Recommanded skim: 2-3 for maximum antiburn, 5-7 for colorful/strong style.
+
+
+
+# Pro tip:
+
+[It would be actually nice to have some support!](https://www.patreon.com/extraltodeus)
+
+Did you know that my first activity is to write creative model merging functions?
+
+While the code is too much of a mess to be shared, I do expose and share my models. You can find them in this [gallery](https://github.com/Extraltodeus/shared_models_galleries)! 😁
