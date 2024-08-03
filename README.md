@@ -78,3 +78,8 @@ While the code is too much of a mess to be shared, I do expose and share my mode
 
 ![00420UI_00001_](https://github.com/user-attachments/assets/861b7c42-8f48-4123-904e-bd1ada973595)
 
+### forgotten setting
+
+![00454UI_00001_](https://github.com/user-attachments/assets/b3f107e4-8ee4-4eb8-beb2-e15506e02283)
+
+
