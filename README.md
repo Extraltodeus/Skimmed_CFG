@@ -10,6 +10,15 @@ Simply plug after the model loader:
 
 ![image](https://github.com/user-attachments/assets/b188947c-6226-42ff-b868-e6a44bbfe590)
 
+
+Side-effects:
+
+- better prompt adherence
+- sharper images
+- less mess / more randomness due to less conflicts in between the positive and negative predictions
+- something something sometimes fused fingers with too low CFG scale or too low amount of steps.
+
+
 Tips:
 
 - The skimming scale is basically how much do you like them burned. 3 was the intended scale but suit to your needs.
