@@ -10,13 +10,13 @@ Simply plug after the model loader (same for all the fours nodes):
 
 ![image](https://github.com/user-attachments/assets/b188947c-6226-42ff-b868-e6a44bbfe590)
 
-nodes: 
+## nodes: 
 - Skimmed CFG: My version first version of this, works like a charm!
 - Skimmed CFG - replace: replace the values within the negative by those in the positive prediction, nullifying the effect.
 - Skimmed CFG - linear interpolation: instead of replacing, does a linear interpolation in between the values. Highly recommanded!
 - Skimmed CFG - linear interpolation dual scales: Two scales. One named "positive" and one.. well "negative". The name is more related to a visualy intuitive relation rather than fully from the predictions. A higher positive will tend to go towards high saturations and vice versa with the other slider.
 
-Side-effects:
+## Side-effects:
 
 - better prompt adherence
 - sharper images
@@ -24,7 +24,7 @@ Side-effects:
 - something something sometimes fused fingers with too low CFG scale or too low amount of steps.
 
 
-Tips:
+## Tips:
 
 - The "Razor skim" toggle may give interesting results...
 - The skimming scale is basically how much do you like them burned. 3 was the intended scale but suit to your needs.
