@@ -17,6 +17,7 @@ Side-effects:
 - sharper images
 - less mess / more randomness due to less conflicts in between the positive and negative predictions
 - something something sometimes fused fingers with too low CFG scale or too low amount of steps.
+- The "Razor skim" toggle may give interesting results...
 
 
 Tips:
