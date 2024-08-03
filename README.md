@@ -1,5 +1,5 @@
 # Skimmed_CFG
-A powerful anti-burn for latent diffusion models (for ComfyUI)
+A powerful anti-burn allowing much higher CFG scales for latent diffusion models (for ComfyUI)
 
 CFG below at: 6/8/12/16/24/32, skimming scale at 6
 
