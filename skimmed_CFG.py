@@ -19,14 +19,15 @@ def skimmed_CFG(x_orig, cond, uncond, cond_scale, skimming_scale):
 class CFG_skimming_single_scale_pre_cfg_node:
     @classmethod
     def INPUT_TYPES(s):
-        step_step = 2
+        step_step = 10
         return {"required": {"model": ("MODEL",),
-                             "Skimming_CFG": ("FLOAT", {"default": 4,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
+                             "Skimming_CFG": ("FLOAT", {"default": 7,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
+                             "razor_skim" : ("BOOLEAN", {"default": False})
                              }}
     RETURN_TYPES = ("MODEL",)
     FUNCTION = "patch"
     CATEGORY = "model_patches/Pre CFG"
-    def patch(self, model, Skimming_CFG):
+    def patch(self, model, Skimming_CFG, razor_skim):
         @torch.no_grad()
         def pre_cfg_patch(args):
             conds_out  = args["conds_out"]
@@ -34,7 +35,7 @@ class CFG_skimming_single_scale_pre_cfg_node:
             x_orig     = args['input']
             if not torch.any(conds_out[1]):
                 return conds_out
-            conds_out[1] = skimmed_CFG(x_orig, conds_out[1], conds_out[0], cond_scale, Skimming_CFG)
+            conds_out[1] = skimmed_CFG(x_orig, conds_out[1], conds_out[0], cond_scale, Skimming_CFG if not razor_skim else 0)
             conds_out[0] = skimmed_CFG(x_orig, conds_out[0], conds_out[1], cond_scale, Skimming_CFG)
             return conds_out
         m = model.clone()
