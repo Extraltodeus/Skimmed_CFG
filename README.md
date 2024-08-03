@@ -26,6 +26,7 @@ Tips:
 - A too low skimming scale may require to do more steps
 - Recommanded skim: 2-3 for maximum antiburn, 5-7 for colorful/strong style. 4 is cruise scale.
 - a good negative prompt is a style negative prompt
+- to use super high scales it is not a bad idea to cut the negative before the end. You can find in [this repository](https://github.com/Extraltodeus/pre_cfg_comfy_nodes_for_ComfyUI/tree/main) a node named "Support empty uncond". Plug it after the skimmed cfg node. Then menu>advanced>conditioning>ConditioningSetTimestepRange and set the and at ~65%. This will avoid potential artifacts.
 
 
 
