@@ -21,7 +21,7 @@ class CFG_skimming_single_scale_pre_cfg_node:
     def INPUT_TYPES(s):
         step_step = 2
         return {"required": {"model": ("MODEL",),
-                             "Skimming_CFG": ("FLOAT", {"default": 7,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
+                             "Skimming_CFG": ("FLOAT", {"default": 4,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
                              }}
     RETURN_TYPES = ("MODEL",)
     FUNCTION = "patch"
