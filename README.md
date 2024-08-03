@@ -40,8 +40,37 @@ Simply plug after the model loader (same for all the fours nodes):
 
 # Pro tip:
 
-[It would be actually nice to have some support!](https://www.patreon.com/extraltodeus)
+[It would be actually nice to have some support!](https://www.patreon.com/extraltodeus) because like this I will continue to share my findings!
 
 Did you know that my first activity is to write creative model merging functions?
 
 While the code is too much of a mess to be shared, I do expose and share my models. You can find them in this [gallery](https://github.com/Extraltodeus/shared_models_galleries)! 😁
+
+
+
+# Other examples with a CFG at 100
+
+### Base image 🤭
+
+![00417UI_00001_](https://github.com/user-attachments/assets/0b4a5ae2-4815-456f-a3ff-4280d311842b)
+
+### Linear interpolation dual scale 10/0
+
+![00409UI_00001_](https://github.com/user-attachments/assets/9bcf9121-4341-4948-94e7-2aebca50a4d3)
+
+### Linear interpolation dual scale 5/0
+
+![00416UI_00001_](https://github.com/user-attachments/assets/f51365fa-9553-43a1-a060-e2b545b1dc74)
+
+### Replace
+
+![00405UI_00001_](https://github.com/user-attachments/assets/8c14a7a7-6b04-4d4b-9264-4651b3134186)
+
+### Skimmed CFG node skimming scale at 4
+
+![00419UI_00001_](https://github.com/user-attachments/assets/0f84ce0a-5547-4594-aff4-9b67eeb3bdf2)
+
+### Skimmed CFG node skimming scale at 4 with razor skim
+
+![00420UI_00001_](https://github.com/user-attachments/assets/861b7c42-8f48-4123-904e-bd1ada973595)
+
