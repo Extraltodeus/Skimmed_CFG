@@ -25,6 +25,7 @@ Tips:
 - SDE samplers can still burn a little but much less
 - A too low skimming scale may require to do more steps
 - Recommanded skim: 2-3 for maximum antiburn, 5-7 for colorful/strong style.
+- a good negative prompt is a style negative prompt
 
 
 
