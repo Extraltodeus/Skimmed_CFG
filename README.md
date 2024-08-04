@@ -16,6 +16,10 @@ Simply plug after the model loader (same for all the fours nodes):
 - Skimmed CFG - linear interpolation: instead of replacing, does a linear interpolation in between the values. Highly recommanded!
 - Skimmed CFG - linear interpolation dual scales: Two scales. One named "positive" and one.. well "negative". The name is more related to a visualy intuitive relation rather than fully from the predictions. A higher positive will tend to go towards high saturations and vice versa with the other slider.
 
+## special option (first node only):
+- full_skim_negative: fully skim some part of the conflicting influence.
+- disable_flipping_filter: the skimming CFG will have much more control. It is meant to be used with the full_skim_negative toggle on. (the last image of this readme is an example)
+
 ## Side-effects:
 
 - better prompt adherence
@@ -26,7 +30,6 @@ Simply plug after the model loader (same for all the fours nodes):
 
 ## Tips:
 
-- The "Razor skim" toggle may give interesting results...
 - The skimming scale is basically how much do you like them burned. 3 was the intended scale but suit to your needs.
 - The SDE samplers can still burn a little but much less
 - The SDE samplers can still totaly do nonsense with low steps
@@ -77,8 +80,7 @@ While the code is too much of a mess to be shared, I do expose and share my mode
 
 ![00420UI_00001_](https://github.com/user-attachments/assets/861b7c42-8f48-4123-904e-bd1ada973595)
 
-### forgotten setting 😶
+### full_skim_negative / disable_flipping_filter / skimming scale at 6 / CFG scale at 32
 
-![00454UI_00001_](https://github.com/user-attachments/assets/b3f107e4-8ee4-4eb8-beb2-e15506e02283)
-
+![00002UI_00002_](https://github.com/user-attachments/assets/85f7ec8c-d7ed-4f7c-91ee-8e704ca9833a)
 
