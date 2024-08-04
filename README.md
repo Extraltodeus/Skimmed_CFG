@@ -12,7 +12,7 @@ Simply plug after the model loader (same for all the fours nodes):
 
 ## nodes: 
 - Skimmed CFG: My version first version of this, works like a charm!
-- Skimmed CFG - replace: replace the values within the negative by those in the positive prediction, nullifying the effect of values targeted by the filter.
+- Skimmed CFG - replace: replace the values within the negative by those in the positive prediction, nullifying (actually giving an equivalent scale of 1) the effect of values targeted by the filter.
 - Skimmed CFG - linear interpolation: instead of replacing, does a linear interpolation in between the values. Highly recommanded!
 - Skimmed CFG - linear interpolation dual scales: Two scales. One named "positive" and one.. well "negative". The name is more related to a visualy intuitive relation rather than fully from the predictions. A higher positive will tend to go towards high saturations and vice versa with the other slider.
 
