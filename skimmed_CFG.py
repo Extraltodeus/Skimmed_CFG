@@ -1,15 +1,21 @@
 import torch
 
+MAX_SCALE = 10
+STEP_STEP = 2
+
 @torch.no_grad()
 def get_skimming_mask(x_orig, cond, uncond, cond_scale, return_denoised=False, disable_flipping_filter=False):
     denoised = x_orig - ((x_orig - uncond) + cond_scale * ((x_orig - cond) - (x_orig - uncond)))
     matching_pred_signs = (cond - uncond).sign() == cond.sign()
     matching_diff_after = cond.sign() == (cond * cond_scale - uncond * (cond_scale - 1)).sign()
+    smaller_abs = uncond.abs() < cond.abs()
+
     if disable_flipping_filter:
-        outer_influence = matching_pred_signs & matching_diff_after
+        outer_influence = matching_pred_signs & matching_diff_after & smaller_abs
     else:
         deviation_influence = (denoised.sign() == (denoised - x_orig).sign())
-        outer_influence = matching_pred_signs & matching_diff_after & deviation_influence
+        outer_influence = matching_pred_signs & matching_diff_after & deviation_influence & smaller_abs
+
     if return_denoised:
         return outer_influence, denoised
     else:
@@ -26,9 +32,8 @@ def skimmed_CFG(x_orig, cond, uncond, cond_scale, skimming_scale, disable_flippi
 class CFG_skimming_single_scale_pre_cfg_node:
     @classmethod
     def INPUT_TYPES(s):
-        step_step = 2
         return {"required": {"model": ("MODEL",),
-                             "Skimming_CFG": ("FLOAT", {"default": 7,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
+                             "Skimming_CFG": ("FLOAT", {"default": 7,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
                              "full_skim_negative" : ("BOOLEAN", {"default": False}),
                              "disable_flipping_filter" : ("BOOLEAN", {"default": False})
                              }}
@@ -91,10 +96,9 @@ class skimReplacePreCFGNode:
 class SkimmedCFGLinInterpCFGPreCFGNode:
     @classmethod
     def INPUT_TYPES(s):
-        step_step = 2
         return {"required": {
                                 "model": ("MODEL",),
-                                "Skimming_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
+                                "Skimming_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -130,11 +134,10 @@ class SkimmedCFGLinInterpCFGPreCFGNode:
 class SkimmedCFGLinInterpDualScalesCFGPreCFGNode:
     @classmethod
     def INPUT_TYPES(s):
-        step_step = 2
         return {"required": {
                                 "model": ("MODEL",),
-                                "Skimming_CFG_positive": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
-                                "Skimming_CFG_negative": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
+                                "Skimming_CFG_positive": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
+                                "Skimming_CFG_negative": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
