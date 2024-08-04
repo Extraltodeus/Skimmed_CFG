@@ -94,7 +94,7 @@ class SkimmedCFGLinInterpCFGPreCFGNode:
         step_step = 2
         return {"required": {
                                 "model": ("MODEL",),
-                                "Skimming_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 10.0,  "step": 1/step_step, "round": 1/100}),
+                                "Skimming_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -133,8 +133,8 @@ class SkimmedCFGLinInterpDualScalesCFGPreCFGNode:
         step_step = 2
         return {"required": {
                                 "model": ("MODEL",),
-                                "Skimming_CFG_positive": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 10.0,  "step": 1/step_step, "round": 1/100}),
-                                "Skimming_CFG_negative": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 10.0,  "step": 1/step_step, "round": 1/100}),
+                                "Skimming_CFG_positive": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
+                                "Skimming_CFG_negative": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": 7.0,  "step": 1/step_step, "round": 1/100}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
