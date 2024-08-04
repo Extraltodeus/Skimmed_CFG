@@ -1,0 +1,14 @@
+[project]
+name = "skimmed_cfg"
+description = "A powerful anti-burn allowing much higher CFG scales for latent diffusion models (for ComfyUI)"
+version = "1.0.0"
+license = {file = "LICENSE"}
+
+[project.urls]
+Repository = "https://github.com/Extraltodeus/Skimmed_CFG"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "Skimmed_CFG"
+Icon = ""
