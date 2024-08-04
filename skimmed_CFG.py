@@ -113,7 +113,7 @@ class SkimmedCFGLinInterpCFGPreCFGNode:
             if not torch.any(conds_out[1]):
                 return conds_out
 
-            fallback_weight = Skimming_CFG / cond_scale
+            fallback_weight = (Skimming_CFG - 1) / (cond_scale - 1)
 
             skim_mask = get_skimming_mask(x_orig, conds_out[0], conds_out[1], cond_scale)
             conds_out[1][skim_mask] = conds_out[0][skim_mask] * (1 - fallback_weight) + conds_out[1][skim_mask] * fallback_weight
@@ -153,8 +153,8 @@ class SkimmedCFGLinInterpDualScalesCFGPreCFGNode:
             if not torch.any(conds_out[1]):
                 return conds_out
 
-            fallback_weight_positive = Skimming_CFG_positive / cond_scale
-            fallback_weight_negative = Skimming_CFG_negative / cond_scale
+            fallback_weight_positive = (Skimming_CFG_positive - 1) / (cond_scale - 1)
+            fallback_weight_negative = (Skimming_CFG_negative - 1) / (cond_scale - 1)
 
             skim_mask = get_skimming_mask(x_orig, conds_out[1], conds_out[0], cond_scale)
             conds_out[1][skim_mask] = conds_out[0][skim_mask] * (1 - fallback_weight_negative) + conds_out[1][skim_mask] * fallback_weight_negative
