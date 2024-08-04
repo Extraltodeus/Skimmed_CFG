@@ -21,7 +21,7 @@ Simply plug after the model loader (same for all the fours nodes):
 - better prompt adherence
 - sharper images
 - less mess / more randomness due to less conflicts in between the positive and negative predictions
-- something something sometimes fused fingers with too low CFG scale or too low amount of steps.
+- something something sometimes fused fingers with too low skimming CFG scale and too low amount of steps.
 
 
 ## Tips:
