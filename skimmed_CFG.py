@@ -8,13 +8,12 @@ def get_skimming_mask(x_orig, cond, uncond, cond_scale, return_denoised=False, d
     denoised = x_orig - ((x_orig - uncond) + cond_scale * ((x_orig - cond) - (x_orig - uncond)))
     matching_pred_signs = (cond - uncond).sign() == cond.sign()
     matching_diff_after = cond.sign() == (cond * cond_scale - uncond * (cond_scale - 1)).sign()
-    # smaller_abs = uncond.abs() < cond.abs()
 
     if disable_flipping_filter:
-        outer_influence = matching_pred_signs & matching_diff_after #& smaller_abs
+        outer_influence = matching_pred_signs & matching_diff_after
     else:
         deviation_influence = (denoised.sign() == (denoised - x_orig).sign())
-        outer_influence = matching_pred_signs & matching_diff_after & deviation_influence #& smaller_abs
+        outer_influence = matching_pred_signs & matching_diff_after & deviation_influence
 
     if return_denoised:
         return outer_influence, denoised
