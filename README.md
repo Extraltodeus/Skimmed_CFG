@@ -1,4 +1,4 @@
-### (better filter to come)
+
 
 # Skimmed_CFG
 A powerful anti-burn allowing much higher CFG scales for latent diffusion models (for ComfyUI)
