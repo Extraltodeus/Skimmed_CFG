@@ -169,7 +169,6 @@ class SkimmedCFGLinInterpDualScalesCFGPreCFGNode:
         m = model.clone()
         m.set_model_sampler_pre_cfg_function(pre_cfg_patch)
         return (m, )
-
 class differenceCFGPreCFGNode:
     @classmethod
     def INPUT_TYPES(s):
@@ -202,7 +201,7 @@ class differenceCFGPreCFGNode:
                 fallback_weight = (new_scale - 1) / (cond_scale - 1)
                 conds_out[1] = conds_out[0] * (1 - fallback_weight) + conds_out[1] * fallback_weight
             elif method in ["linear_distance","squared_distance"]:
-                conds_out[1] = interpolated_scales(conds_out[0],conds_out[1],cond_scale,reference_CFG,method=="squared_distance")
+                conds_out[1] = interpolated_scales(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,method=="squared_distance")
             elif method == "linear_distance_sine":
                 conds_out[1] = interpolate_scales_sine_power(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,sine_power,reverse_sine)
             return conds_out
@@ -212,11 +211,9 @@ class differenceCFGPreCFGNode:
         return (m, )
 
 @torch.no_grad()
-def interpolated_scales(cond,uncond,cond_scale,small_scale,squared=False):
-    # deltacfg_normal = cond_scale  * cond - (cond_scale  - 1) * uncond
-    deltacfg_normal = 100  * cond - 99 * uncond
-    # deltacfg_small  = small_scale * cond - (small_scale - 1) * uncond
-    deltacfg_small  = 3 * cond - 2 * uncond
+def interpolated_scales(x_orig,cond,uncond,cond_scale,small_scale,squared=False):
+    deltacfg_normal = x_orig - cond_scale  * cond - (cond_scale  - 1) * uncond
+    deltacfg_small  = x_orig - small_scale * cond - (small_scale - 1) * uncond
     absdiff = (deltacfg_normal - deltacfg_small).abs()
     absdiff = (absdiff-absdiff.min()) / (absdiff.max()-absdiff.min())
     if squared:
