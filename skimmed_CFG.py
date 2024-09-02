@@ -169,3 +169,80 @@ class SkimmedCFGLinInterpDualScalesCFGPreCFGNode:
         m = model.clone()
         m.set_model_sampler_pre_cfg_function(pre_cfg_patch)
         return (m, )
+
+class differenceCFGPreCFGNode:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                                "model": ("MODEL",),
+                                "reference_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
+                                "method" : (["linear_distance","absolute_sum","linear_distance_sine"],),
+                              }
+                              }
+    RETURN_TYPES = ("MODEL",)
+    FUNCTION = "patch"
+
+    CATEGORY = "model_patches/Pre CFG"
+
+    def patch(self, model, reference_CFG, method, sine_power=0, reverse_sine=True):
+
+        @torch.no_grad()
+        def pre_cfg_patch(args):
+            conds_out  = args["conds_out"]
+            cond_scale = args["cond_scale"]
+            x_orig = args['input']
+
+            if not torch.any(conds_out[1]):
+                return conds_out
+
+            if method == "absolute_sum":
+                ref_norm = (conds_out[0] * reference_CFG - conds_out[1] * (reference_CFG - 1)).norm(p=1)
+                cfg_norm = (conds_out[0] * cond_scale - conds_out[1] * (cond_scale - 1)).norm(p=1)
+                new_scale = cond_scale * ref_norm / cfg_norm
+                fallback_weight = (new_scale - 1) / (cond_scale - 1)
+                conds_out[1] = conds_out[0] * (1 - fallback_weight) + conds_out[1] * fallback_weight
+            elif method == "linear_distance":
+                conds_out[1] = interpolated_scales(conds_out[0],conds_out[1],cond_scale,reference_CFG)
+            elif method == "linear_distance_sine":
+                conds_out[1] = interpolate_scales_sine_power(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,sine_power,reverse_sine)
+            return conds_out
+
+        m = model.clone()
+        m.set_model_sampler_pre_cfg_function(pre_cfg_patch)
+        return (m, )
+
+@torch.no_grad()
+def interpolated_scales(cond,uncond,cond_scale,small_scale):
+    deltacfg_normal = cond_scale  * cond - (cond_scale  - 1) * uncond
+    deltacfg_small  = small_scale * cond - (small_scale - 1) * uncond
+    absdiff = (deltacfg_normal - deltacfg_small).abs()
+    absdiff = (absdiff-absdiff.min()) / (absdiff.max()-absdiff.min())
+    new_scale  = (small_scale - 1) / (cond_scale - 1)
+    smaller_uncond = cond * (1 - new_scale) + uncond * new_scale
+    new_uncond = smaller_uncond * (1 - absdiff) + uncond * absdiff
+    return new_uncond
+
+@torch.no_grad()
+def interpolate_scales_sine_power(x_orig,cond,uncond,cond_scale,small_scale,sine_power,reverse_sine):
+    sine_value = sine_power
+    if sine_power == 0:
+        sine_value = 6.55
+
+    deltacfg_normal = x_orig - ((x_orig - uncond) + cond_scale  * ((x_orig - cond) - (x_orig - uncond)))
+    deltacfg_small  = x_orig - ((x_orig - uncond) + small_scale * ((x_orig - cond) - (x_orig - uncond)))
+
+    absdiff = (deltacfg_normal/deltacfg_normal.norm() - deltacfg_small/deltacfg_small.norm()).abs()
+
+    absdiff = torch.nan_to_num(absdiff, nan=0.0, posinf=1.0, neginf=0.0)
+    absdiff = (absdiff-absdiff.min()) / (absdiff.max()-absdiff.min())
+    absdiff = torch.clamp(absdiff,min=0,max=1)
+
+    if reverse_sine:
+        absdiff = 1 - absdiff
+
+    absdiff = torch.sin(absdiff ** sine_value * torch.pi)
+
+    new_scale  = (small_scale - 1) / (cond_scale - 1)
+    smaller_uncond = cond * (1 - new_scale) + uncond * new_scale
+    new_uncond = smaller_uncond * (1 - absdiff) + uncond * absdiff
+    return new_uncond
