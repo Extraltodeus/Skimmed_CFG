@@ -212,13 +212,13 @@ class differenceCFGPreCFGNode:
         return (m, )
 
 @torch.no_grad()
-def interpolated_scales(cond,uncond,cond_scale,small_scale,brighter=False):
+def interpolated_scales(cond,uncond,cond_scale,small_scale,squared=False):
     deltacfg_normal = cond_scale  * cond - (cond_scale  - 1) * uncond
     deltacfg_small  = small_scale * cond - (small_scale - 1) * uncond
     absdiff = (deltacfg_normal - deltacfg_small).abs()
     absdiff = (absdiff-absdiff.min()) / (absdiff.max()-absdiff.min())
-    if brighter:
-        absdiff = 1 - (1 - absdiff) ** 2
+    if squared:
+        absdiff = absdiff ** 2
     new_scale  = (small_scale - 1) / (cond_scale - 1)
     smaller_uncond = cond * (1 - new_scale) + uncond * new_scale
     new_uncond = smaller_uncond * (1 - absdiff) + uncond * absdiff
