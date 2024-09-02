@@ -176,7 +176,7 @@ class differenceCFGPreCFGNode:
         return {"required": {
                                 "model": ("MODEL",),
                                 "reference_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
-                                "method" : (["linear_distance","linear_distance_squared","absolute_sum","linear_distance_sine"],),
+                                "method" : (["linear_distance","squared_distance","absolute_sum","linear_distance_sine"],),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -201,8 +201,8 @@ class differenceCFGPreCFGNode:
                 new_scale = cond_scale * ref_norm / cfg_norm
                 fallback_weight = (new_scale - 1) / (cond_scale - 1)
                 conds_out[1] = conds_out[0] * (1 - fallback_weight) + conds_out[1] * fallback_weight
-            elif method in ["linear_distance","linear_distance_squared"]:
-                conds_out[1] = interpolated_scales(conds_out[0],conds_out[1],cond_scale,reference_CFG,method=="linear_distance_squared")
+            elif method in ["linear_distance","squared_distance"]:
+                conds_out[1] = interpolated_scales(conds_out[0],conds_out[1],cond_scale,reference_CFG,method=="squared_distance")
             elif method == "linear_distance_sine":
                 conds_out[1] = interpolate_scales_sine_power(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,sine_power,reverse_sine)
             return conds_out
