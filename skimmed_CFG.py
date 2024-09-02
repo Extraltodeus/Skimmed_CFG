@@ -169,6 +169,7 @@ class SkimmedCFGLinInterpDualScalesCFGPreCFGNode:
         m = model.clone()
         m.set_model_sampler_pre_cfg_function(pre_cfg_patch)
         return (m, )
+
 class differenceCFGPreCFGNode:
     @classmethod
     def INPUT_TYPES(s):
@@ -176,6 +177,7 @@ class differenceCFGPreCFGNode:
                                 "model": ("MODEL",),
                                 "reference_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
                                 "method" : (["linear_distance","squared_distance","root_distance","absolute_sum"],),
+                                "end_at_sigma": ("FLOAT", {"default": 0.62,  "min": 0.0, "max": 1000000.0,  "step": 1/100, "round": 1/100}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -183,15 +185,16 @@ class differenceCFGPreCFGNode:
 
     CATEGORY = "model_patches/Pre CFG"
 
-    def patch(self, model, reference_CFG, method, sine_power=0, reverse_sine=True):
-        print(f" \033[92mDifference CFG method: {method} / Reference Scale: {reference_CFG}\033[0m")
+    def patch(self, model, reference_CFG, method, end_at_sigma, sine_power=0, reverse_sine=True):
+        print(f" \033[92mDifference CFG method: {method} / Reference Scale: {reference_CFG} / End at sigma: {round(end_at_sigma,2)}\033[0m")
         @torch.no_grad()
         def pre_cfg_patch(args):
             conds_out  = args["conds_out"]
             cond_scale = args["cond_scale"]
             x_orig = args['input']
+            sigma  = args["sigma"][0]
 
-            if not torch.any(conds_out[1]):
+            if not torch.any(conds_out[1]) or sigma <= end_at_sigma:
                 return conds_out
 
             if method == "absolute_sum":
@@ -209,6 +212,7 @@ class differenceCFGPreCFGNode:
         m = model.clone()
         m.set_model_sampler_pre_cfg_function(pre_cfg_patch)
         return (m, )
+
 
 @torch.no_grad()
 def interpolated_scales(x_orig,cond,uncond,cond_scale,small_scale,squared=False,root_dist=False):
