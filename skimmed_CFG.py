@@ -175,7 +175,7 @@ class differenceCFGPreCFGNode:
         return {"required": {
                                 "model": ("MODEL",),
                                 "reference_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
-                                "method" : (["linear_distance","squared_distance","root_distance","absolute_sum","linear_distance_sine"],),
+                                "method" : (["linear_distance","squared_distance","root_distance","absolute_sum"],),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
