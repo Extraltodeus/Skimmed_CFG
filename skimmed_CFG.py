@@ -175,7 +175,7 @@ class differenceCFGPreCFGNode:
         return {"required": {
                                 "model": ("MODEL",),
                                 "reference_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
-                                "method" : (["linear_distance","squared_distance","absolute_sum","linear_distance_sine"],),
+                                "method" : (["linear_distance","squared_distance","root_distance","absolute_sum","linear_distance_sine"],),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -200,8 +200,8 @@ class differenceCFGPreCFGNode:
                 new_scale = cond_scale * ref_norm / cfg_norm
                 fallback_weight = (new_scale - 1) / (cond_scale - 1)
                 conds_out[1] = conds_out[0] * (1 - fallback_weight) + conds_out[1] * fallback_weight
-            elif method in ["linear_distance","squared_distance"]:
-                conds_out[1] = interpolated_scales(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,method=="squared_distance")
+            elif method in ["linear_distance","squared_distance","root_distance"]:
+                conds_out[1] = interpolated_scales(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,method=="squared_distance",method=="root_distance")
             elif method == "linear_distance_sine":
                 conds_out[1] = interpolate_scales_sine_power(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,sine_power,reverse_sine)
             return conds_out
@@ -211,13 +211,15 @@ class differenceCFGPreCFGNode:
         return (m, )
 
 @torch.no_grad()
-def interpolated_scales(x_orig,cond,uncond,cond_scale,small_scale,squared=False):
+def interpolated_scales(x_orig,cond,uncond,cond_scale,small_scale,squared=False,root_dist=False):
     deltacfg_normal = x_orig - cond_scale  * cond - (cond_scale  - 1) * uncond
     deltacfg_small  = x_orig - small_scale * cond - (small_scale - 1) * uncond
     absdiff = (deltacfg_normal - deltacfg_small).abs()
     absdiff = (absdiff-absdiff.min()) / (absdiff.max()-absdiff.min())
     if squared:
         absdiff = absdiff ** 2
+    elif root_dist:
+        absdiff = absdiff ** 0.5
     new_scale  = (small_scale - 1) / (cond_scale - 1)
     smaller_uncond = cond * (1 - new_scale) + uncond * new_scale
     new_uncond = smaller_uncond * (1 - absdiff) + uncond * absdiff
