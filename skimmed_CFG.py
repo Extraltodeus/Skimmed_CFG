@@ -39,7 +39,7 @@ class CFG_skimming_single_scale_pre_cfg_node:
     RETURN_TYPES = ("MODEL",)
     FUNCTION = "patch"
     CATEGORY = "model_patches/Pre CFG"
-    def patch(self, model, Skimming_CFG=-1, full_skim_negative=True, disable_flipping_filter=True, start_at_percentage=0,end_at_percentage=1):
+    def patch(self, model, Skimming_CFG=-1, full_skim_negative=True, disable_flipping_filter=True, start_at_percentage=0,end_at_percentage=1,full_skim_scale=0):
         model_sampling = model.get_model_object("model_sampling")
         start_at_sigma = model_sampling.percent_to_sigma(start_at_percentage)
         end_at_sigma   = model_sampling.percent_to_sigma(end_at_percentage)
@@ -53,7 +53,7 @@ class CFG_skimming_single_scale_pre_cfg_node:
             if not torch.any(conds_out[1]) or sigma <= end_at_sigma or sigma > start_at_sigma:
                 return conds_out
             practical_scale = cond_scale if Skimming_CFG < 0 else Skimming_CFG
-            conds_out[1] = skimmed_CFG(x_orig, conds_out[1], conds_out[0], cond_scale, practical_scale if not full_skim_negative else 0, disable_flipping_filter)
+            conds_out[1] = skimmed_CFG(x_orig, conds_out[1], conds_out[0], cond_scale, practical_scale if not full_skim_negative else full_skim_scale, disable_flipping_filter)
             conds_out[0] = skimmed_CFG(x_orig, conds_out[0], conds_out[1], cond_scale, practical_scale, disable_flipping_filter)
             return conds_out
         m = model.clone()
@@ -65,7 +65,8 @@ class skimStartPreCFGNode:
     def INPUT_TYPES(s):
         return {"required": {
                                 "model": ("MODEL",),
-                                "end_at_percentage": ("FLOAT", {"default": 0.2, "min": 0.0, "max": 1.0, "step": 1/100, "round": 1/100, "tooltip":"Relative to the step progression. 0 means disabled, 1 means active until the end.\nRecommended 0.2-0.8 with dpmpp2m, can be carried until the end with SDE samplers."}),
+                                "end_at_percentage": ("FLOAT", {"default": 0.3, "min": 0.0, "max": 1.0, "step": 1/20, "round": 1/100, "tooltip":"Relative to the step progression.\n0 means disabled\n1 means active until the end."}),
+                                "soft_skim" : ("BOOLEAN", {"default": False, "tooltip":"Makes it easier depending on the sampler."}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -73,9 +74,10 @@ class skimStartPreCFGNode:
 
     CATEGORY = "model_patches/Pre CFG"
 
-    def patch(self, model, end_at_percentage):
+    def patch(self, model, end_at_percentage, soft_skim):
         ssspcn = CFG_skimming_single_scale_pre_cfg_node()
-        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=True,end_at_percentage=end_at_percentage)
+        negative_scale = 2 if soft_skim else 0
+        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=True,end_at_percentage=end_at_percentage,full_skim_scale=negative_scale)
         return (m, )
 
 class skimReplacePreCFGNode:
