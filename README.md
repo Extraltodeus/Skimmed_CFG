@@ -1,4 +1,6 @@
+## Update
 
+New node: "Timed flip". I can not explain. Jump in the latent space!
 
 # Skimmed_CFG
 A powerful anti-burn allowing much higher CFG scales for latent diffusion models (for ComfyUI)
