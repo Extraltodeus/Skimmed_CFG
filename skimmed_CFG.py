@@ -32,26 +32,50 @@ class CFG_skimming_single_scale_pre_cfg_node:
     @classmethod
     def INPUT_TYPES(s):
         return {"required": {"model": ("MODEL",),
-                             "Skimming_CFG": ("FLOAT", {"default": 7,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
+                             "Skimming_CFG": ("FLOAT", {"default": 7,  "min": 0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100, "tooltip":"The fallback scale for the ''bad'' values."}),
                              "full_skim_negative" : ("BOOLEAN", {"default": False}),
-                             "disable_flipping_filter" : ("BOOLEAN", {"default": False})
+                             "disable_flipping_filter" : ("BOOLEAN", {"default": False}),
                              }}
     RETURN_TYPES = ("MODEL",)
     FUNCTION = "patch"
     CATEGORY = "model_patches/Pre CFG"
-    def patch(self, model, Skimming_CFG, full_skim_negative, disable_flipping_filter):
+    def patch(self, model, Skimming_CFG=-1, full_skim_negative=True, disable_flipping_filter=True, start_at_percentage=0,end_at_percentage=1):
+        model_sampling = model.get_model_object("model_sampling")
+        start_at_sigma = model_sampling.percent_to_sigma(start_at_percentage)
+        end_at_sigma   = model_sampling.percent_to_sigma(end_at_percentage)
+
         @torch.no_grad()
         def pre_cfg_patch(args):
             conds_out  = args["conds_out"]
             cond_scale = args["cond_scale"]
             x_orig     = args['input']
-            if not torch.any(conds_out[1]):
+            sigma      = args["sigma"][0].item()
+            if not torch.any(conds_out[1]) or sigma <= end_at_sigma or sigma > start_at_sigma:
                 return conds_out
-            conds_out[1] = skimmed_CFG(x_orig, conds_out[1], conds_out[0], cond_scale, Skimming_CFG if not full_skim_negative else 0, disable_flipping_filter)
-            conds_out[0] = skimmed_CFG(x_orig, conds_out[0], conds_out[1], cond_scale, Skimming_CFG, disable_flipping_filter)
+            practical_scale = cond_scale if Skimming_CFG < 0 else Skimming_CFG
+            conds_out[1] = skimmed_CFG(x_orig, conds_out[1], conds_out[0], cond_scale, practical_scale if not full_skim_negative else 0, disable_flipping_filter)
+            conds_out[0] = skimmed_CFG(x_orig, conds_out[0], conds_out[1], cond_scale, practical_scale, disable_flipping_filter)
             return conds_out
         m = model.clone()
         m.set_model_sampler_pre_cfg_function(pre_cfg_patch)
+        return (m, )
+
+class skimStartPreCFGNode:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                                "model": ("MODEL",),
+                                "end_at_percentage": ("FLOAT", {"default": 0.3, "min": 0.0, "max": 1.0, "step": 1/100, "round": 1/100, "tooltip":"Relative to the step progression. 0 means disabled, 1 means active until the end."}),
+                              }
+                              }
+    RETURN_TYPES = ("MODEL",)
+    FUNCTION = "patch"
+
+    CATEGORY = "model_patches/Pre CFG"
+
+    def patch(self, model, end_at_percentage):
+        ssspcn = CFG_skimming_single_scale_pre_cfg_node()
+        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=True,end_at_percentage=end_at_percentage)
         return (m, )
 
 class skimReplacePreCFGNode:
@@ -177,7 +201,7 @@ class differenceCFGPreCFGNode:
                                 "model": ("MODEL",),
                                 "reference_CFG": ("FLOAT", {"default": 5.0,  "min": 0.0, "max": MAX_SCALE,  "step": 1 / STEP_STEP, "round": 1/100}),
                                 "method" : (["linear_distance","squared_distance","root_distance","absolute_sum"],),
-                                "end_at_sigma": ("FLOAT", {"default": 0.62,  "min": 0.0, "max": 1000000.0,  "step": 1/100, "round": 1/100}),
+                                "end_at_percentage": ("FLOAT", {"default": 0.80,  "min": 0.0, "max": 1.0,  "step": 1/100, "round": 1/100, "tooltip":"Relative to the step progression. 0 means disabled, 1 means active until the end."}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -185,8 +209,10 @@ class differenceCFGPreCFGNode:
 
     CATEGORY = "model_patches/Pre CFG"
 
-    def patch(self, model, reference_CFG, method, end_at_sigma, sine_power=0, reverse_sine=True):
-        print(f" \033[92mDifference CFG method: {method} / Reference Scale: {reference_CFG} / End at sigma: {round(end_at_sigma,2)}\033[0m")
+    def patch(self, model, reference_CFG, method, end_at_percentage):
+        model_sampling = model.get_model_object("model_sampling")
+        end_at_sigma   = model_sampling.percent_to_sigma(end_at_percentage)
+        print(f" \033[92mDifference CFG method: {method} / Reference Scale: {reference_CFG} / End at percent/sigma: {round(end_at_percentage,2)}/{round(end_at_sigma,2)}\033[0m")
         @torch.no_grad()
         def pre_cfg_patch(args):
             conds_out  = args["conds_out"]
@@ -205,14 +231,11 @@ class differenceCFGPreCFGNode:
                 conds_out[1] = conds_out[0] * (1 - fallback_weight) + conds_out[1] * fallback_weight
             elif method in ["linear_distance","squared_distance","root_distance"]:
                 conds_out[1] = interpolated_scales(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,method=="squared_distance",method=="root_distance")
-            elif method == "linear_distance_sine":
-                conds_out[1] = interpolate_scales_sine_power(x_orig,conds_out[0],conds_out[1],cond_scale,reference_CFG,sine_power,reverse_sine)
             return conds_out
 
         m = model.clone()
         m.set_model_sampler_pre_cfg_function(pre_cfg_patch)
         return (m, )
-
 
 @torch.no_grad()
 def interpolated_scales(x_orig,cond,uncond,cond_scale,small_scale,squared=False,root_dist=False):
@@ -229,28 +252,3 @@ def interpolated_scales(x_orig,cond,uncond,cond_scale,small_scale,squared=False,
     new_uncond = smaller_uncond * (1 - absdiff) + uncond * absdiff
     return new_uncond
 
-# it was a bad idea
-@torch.no_grad()
-def interpolate_scales_sine_power(x_orig,cond,uncond,cond_scale,small_scale,sine_power,reverse_sine):
-    sine_value = sine_power
-    if sine_power == 0:
-        sine_value = 6.55
-
-    deltacfg_normal = x_orig - ((x_orig - uncond) + cond_scale  * ((x_orig - cond) - (x_orig - uncond)))
-    deltacfg_small  = x_orig - ((x_orig - uncond) + small_scale * ((x_orig - cond) - (x_orig - uncond)))
-
-    absdiff = (deltacfg_normal/deltacfg_normal.norm() - deltacfg_small/deltacfg_small.norm()).abs()
-
-    absdiff = torch.nan_to_num(absdiff, nan=0.0, posinf=1.0, neginf=0.0)
-    absdiff = (absdiff-absdiff.min()) / (absdiff.max()-absdiff.min())
-    absdiff = torch.clamp(absdiff,min=0,max=1)
-
-    if reverse_sine:
-        absdiff = 1 - absdiff
-
-    absdiff = torch.sin(absdiff ** sine_value * torch.pi)
-
-    new_scale  = (small_scale - 1) / (cond_scale - 1)
-    smaller_uncond = cond * (1 - new_scale) + uncond * new_scale
-    new_uncond = smaller_uncond * (1 - absdiff) + uncond * absdiff
-    return new_uncond
