@@ -65,7 +65,7 @@ class skimStartPreCFGNode:
     def INPUT_TYPES(s):
         return {"required": {
                                 "model": ("MODEL",),
-                                "end_at_percentage": ("FLOAT", {"default": 0.2, "min": 0.0, "max": 1.0, "step": 1/100, "round": 1/100, "tooltip":"Relative to the step progression. 0 means disabled, 1 means active until the end.\nRecommended 0.2-0.8"}),
+                                "end_at_percentage": ("FLOAT", {"default": 0.2, "min": 0.0, "max": 1.0, "step": 1/100, "round": 1/100, "tooltip":"Relative to the step progression. 0 means disabled, 1 means active until the end.\nRecommended 0.2-0.8 with dpmpp2m, can be carried until the end with SDE samplers."}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
