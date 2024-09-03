@@ -75,7 +75,7 @@ class skimStartPreCFGNode:
 
     def patch(self, model, end_at_percentage):
         ssspcn = CFG_skimming_single_scale_pre_cfg_node()
-        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=True,end_at_percentage=end_at_percentage,full_skim_scale=1)
+        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=True,end_at_percentage=end_at_percentage,full_skim_scale=0)
         return (m, )
 
 class skimReplacePreCFGNode:
