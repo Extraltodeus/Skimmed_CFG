@@ -66,7 +66,6 @@ class skimStartPreCFGNode:
         return {"required": {
                                 "model": ("MODEL",),
                                 "end_at_percentage": ("FLOAT", {"default": 0.3, "min": 0.0, "max": 1.0, "step": 1/20, "round": 1/100, "tooltip":"Relative to the step progression.\n0 means disabled\n1 means active until the end."}),
-                                "soft_skim" : ("BOOLEAN", {"default": False, "tooltip":"Makes it easier depending on the sampler."}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -76,8 +75,7 @@ class skimStartPreCFGNode:
 
     def patch(self, model, end_at_percentage, soft_skim):
         ssspcn = CFG_skimming_single_scale_pre_cfg_node()
-        negative_scale = 2 if soft_skim else 0
-        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=True,end_at_percentage=end_at_percentage,full_skim_scale=negative_scale)
+        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=True,end_at_percentage=end_at_percentage,full_skim_scale=1)
         return (m, )
 
 class skimReplacePreCFGNode:
