@@ -39,7 +39,7 @@ class CFG_skimming_single_scale_pre_cfg_node:
     RETURN_TYPES = ("MODEL",)
     FUNCTION = "patch"
     CATEGORY = "model_patches/Pre CFG"
-    def patch(self, model, Skimming_CFG=-1, full_skim_negative=True, disable_flipping_filter=True, start_at_percentage=0,end_at_percentage=1,full_skim_scale=0):
+    def patch(self, model, Skimming_CFG=-1, full_skim_negative=True, disable_flipping_filter=False, start_at_percentage=0,end_at_percentage=1,full_skim_scale=0):
         model_sampling = model.get_model_object("model_sampling")
         start_at_sigma = model_sampling.percent_to_sigma(start_at_percentage)
         end_at_sigma   = model_sampling.percent_to_sigma(end_at_percentage)
