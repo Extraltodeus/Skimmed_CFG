@@ -1,4 +1,4 @@
-## Update
+### Update
 
 New node: "Timed flip". I can not explain. Jump in the latent space!
 
