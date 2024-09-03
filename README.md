@@ -36,7 +36,7 @@ Simply plug after the model loader (same for all the fours nodes):
 
 - The skimming scale is basically how much do you like them burned. 3 was the intended scale but suit to your needs.
 - The SDE samplers can still burn a little but much less
-- The SDE samplers can still totaly do nonsense with low steps (not with the node named "skim start")
+- The SDE samplers can still totaly do nonsense with low steps (not with the node named "Timed flip")
 - A too low skimming scale may require to do more steps
 - Recommanded skim: 2-3 for maximum antiburn, 5-7 for colorful/strong style. 4 is cruise scale.
 - a good negative prompt is a style negative prompt
@@ -84,7 +84,7 @@ While the code is too much of a mess to be shared, I do expose and share my mode
 
 ![00420UI_00001_](https://github.com/user-attachments/assets/861b7c42-8f48-4123-904e-bd1ada973595)
 
-### full_skim_negative / disable_flipping_filter / skimming scale at 6 / CFG scale at 32 (The node "Skim start" is a preset for these settings with the possibility to cut the effect earlier)
+### full_skim_negative / disable_flipping_filter / skimming scale at 6 / CFG scale at 32
 
 ![00002UI_00002_](https://github.com/user-attachments/assets/85f7ec8c-d7ed-4f7c-91ee-8e704ca9833a)
 
