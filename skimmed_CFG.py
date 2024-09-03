@@ -229,6 +229,7 @@ def interpolated_scales(x_orig,cond,uncond,cond_scale,small_scale,squared=False,
     new_uncond = smaller_uncond * (1 - absdiff) + uncond * absdiff
     return new_uncond
 
+# it was a bad idea
 @torch.no_grad()
 def interpolate_scales_sine_power(x_orig,cond,uncond,cond_scale,small_scale,sine_power,reverse_sine):
     sine_value = sine_power
