@@ -18,7 +18,7 @@ Simply plug after the model loader (same for all the fours nodes):
 - Skimmed CFG - linear interpolation: instead of replacing, does a linear interpolation in between the values. Highly recommanded!
 - Skimmed CFG - linear interpolation dual scales: Two scales. One named "positive" and one.. well "negative". The name is more related to a visualy intuitive relation rather than fully from the predictions. A higher positive will tend to go towards high saturations and vice versa with the other slider.
 - Skimmed CFG - Difference CFG: Other algorithms based on changes depending on the scale. Brings back what goes too far in comparison.
-- Skimmed CFG - Skim start: To be used with normal scales. Enhances the randomness and overall quality of the image. A bit less of an antiburn and a lot more of an enhancer.
+- Skimmed CFG - Skim start: To be used with normal scales. Enhances the randomness and overall quality of the image. A bit less of an antiburn and a lot more of an enhancer. SDE Samplers react extremely well to it and can use it until the end. DPM++2M itself however requires an earlier stop.
 
 ## special option (first node only):
 - full_skim_negative: fully skim some part of the conflicting influence.
