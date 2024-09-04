@@ -73,6 +73,7 @@ class skimFlipPreCFGNode:
         return {"required": {
                                 "model": ("MODEL",),
                                 "flip_at": ("FLOAT", {"default": 0.3, "min": 0.0, "max": 1.0, "step": 1/20, "round": 1/100, "tooltip":"Relative to the step progression.\nCompletely at 0 will give smoother results\nCompletely at one will give noisier results.\nThe influence is more important from 0% to 30%"}),
+                                "reverse" : ("BOOLEAN", {"default": False, "tooltip":"If turned on you will obtain a composition closer to what you would normally get with no modification."}),
                               }
                               }
     RETURN_TYPES = ("MODEL",)
@@ -80,9 +81,9 @@ class skimFlipPreCFGNode:
 
     CATEGORY = "model_patches/Pre CFG"
 
-    def patch(self, model, flip_at):
+    def patch(self, model, flip_at, reverse):
         ssspcn = CFG_skimming_single_scale_pre_cfg_node()
-        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=False,flip_at_percentage=flip_at)
+        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=reverse,flip_at_percentage=flip_at)
         return (m, )
 
 class skimReplacePreCFGNode:
