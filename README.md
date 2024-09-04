@@ -1,6 +1,6 @@
 ### Update
 
-New node: "Timed flip". I can not explain. Jump in the latent space!
+New node: "Timed flip". Less limiting and more discrete "controlling" effect. Enhances the randomness overall without turning everything into chaos.
 
 # Skimmed_CFG
 A powerful anti-burn allowing much higher CFG scales for latent diffusion models (for ComfyUI)
