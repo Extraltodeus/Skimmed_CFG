@@ -7,4 +7,5 @@ NODE_CLASS_MAPPINGS = {
     "Skimmed CFG - linear interpolation dual scales": SkimmedCFGLinInterpDualScalesCFGPreCFGNode,
     "Skimmed CFG - Difference CFG": differenceCFGPreCFGNode,
     "Skimmed CFG - Timed flip": skimFlipPreCFGNode,
+    "Skimmed CFG - Clean Skim": constantSkimPreCFGNode,
 }
