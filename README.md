@@ -1,6 +1,8 @@
 ### Update
 
-New node: "Timed flip". Less limiting and more discrete "controlling" effect. Enhances the randomness overall without turning everything into chaos.
+New nodes:
+- "Timed flip": Less limiting and more discrete "controlling" effect. Enhances the randomness overall without turning everything into chaos.
+- "Clean Skim": [I prefer less sliders than more.](https://youtu.be/-3_IuPMya6k?si=k_Lv6PHAJ9wbK5n9&t=7) This is what gives the most satisfying results among without limiting the burns so much. It is the same as using the base node "Skimmed CFG" with a scale equal to your sampler and "full skim" toggled on.
 
 # Skimmed_CFG
 A powerful anti-burn allowing much higher CFG scales for latent diffusion models (for ComfyUI)
