@@ -44,6 +44,8 @@ class CFG_skimming_single_scale_pre_cfg_node:
         start_at_sigma = model_sampling.percent_to_sigma(start_at_percentage)
         end_at_sigma   = model_sampling.percent_to_sigma(end_at_percentage)
         flip_at_sigma  = model_sampling.percent_to_sigma(flip_at_percentage)
+        if 1 > flip_at_percentage > 0:
+            print(f" \033[92mFlip at sigma: {round(flip_at_sigma, 2)}\033[0m")
 
         @torch.no_grad()
         def pre_cfg_patch(args):
@@ -84,6 +86,24 @@ class skimFlipPreCFGNode:
     def patch(self, model, flip_at, reverse):
         ssspcn = CFG_skimming_single_scale_pre_cfg_node()
         m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=reverse,flip_at_percentage=flip_at)
+        return (m, )
+
+class constantSkimPreCFGNode:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                                "model": ("MODEL",),
+                                "enabled" : ("BOOLEAN", {"default": True}),
+                              }
+                              }
+    RETURN_TYPES = ("MODEL",)
+    FUNCTION = "patch"
+    CATEGORY = "model_patches/Pre CFG"
+    def patch(self, model, enabled):
+        if not enabled:
+            return model,
+        ssspcn = CFG_skimming_single_scale_pre_cfg_node()
+        m, = ssspcn.patch(model=model,Skimming_CFG=-1,full_skim_negative=True,disable_flipping_filter=False)
         return (m, )
 
 class skimReplacePreCFGNode:
