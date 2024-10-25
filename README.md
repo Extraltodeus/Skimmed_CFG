@@ -11,6 +11,8 @@ Simply plug after the model loader (same for all the fours nodes):
 
 ![image](https://github.com/user-attachments/assets/b188947c-6226-42ff-b868-e6a44bbfe590)
 
+Tested with SD3.5 turbo. To make it work set the skimming scale at 2~2.5
+
 ## nodes: 
 - Skimmed CFG: My version first version of this, works like a charm!
 - Skimmed CFG - replace: replace the values within the negative by those in the positive prediction, nullifying (actually giving an equivalent scale of 1) the effect of values targeted by the filter.
