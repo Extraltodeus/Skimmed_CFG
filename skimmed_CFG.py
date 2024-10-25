@@ -134,7 +134,7 @@ class skimReplacePreCFGNode:
             skim_mask = get_skimming_mask(x_orig, cond, uncond, cond_scale)
             uncond[skim_mask] = cond[skim_mask]
 
-            skim_mask = get_skimming_mask(x_orig, uncond, cond, cond_scale)
+            skim_mask = get_skimming_mask(x_orig, uncond, cond, cond_scale - 1)
             uncond[skim_mask] = cond[skim_mask]
 
             return [cond,uncond]
