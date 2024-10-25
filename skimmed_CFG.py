@@ -63,7 +63,7 @@ class CFG_skimming_single_scale_pre_cfg_node:
                 flip_filter = not disable_flipping_filter
 
             conds_out[1] = skimmed_CFG(x_orig, conds_out[1], conds_out[0], cond_scale, practical_scale if not full_skim_negative else 0, flip_filter)
-            conds_out[0] = skimmed_CFG(x_orig, conds_out[0], conds_out[1], cond_scale, practical_scale, flip_filter)
+            conds_out[0] = skimmed_CFG(x_orig, conds_out[0], conds_out[1], cond_scale - 1, practical_scale, flip_filter)
             return conds_out
         m = model.clone()
         m.set_model_sampler_pre_cfg_function(pre_cfg_patch)
