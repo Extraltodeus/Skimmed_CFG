@@ -1,11 +1,3 @@
-from .skimmed_CFG import *
+from .skimmed_CFG import comfy_entrypoint
 
-NODE_CLASS_MAPPINGS = {
-    "Skimmed CFG": CFG_skimming_single_scale_pre_cfg_node,
-    "Skimmed CFG - replace": skimReplacePreCFGNode,
-    "Skimmed CFG - linear interpolation": SkimmedCFGLinInterpCFGPreCFGNode,
-    "Skimmed CFG - linear interpolation dual scales": SkimmedCFGLinInterpDualScalesCFGPreCFGNode,
-    "Skimmed CFG - Difference CFG": differenceCFGPreCFGNode,
-    "Skimmed CFG - Timed flip": skimFlipPreCFGNode,
-    "Skimmed CFG - Clean Skim": constantSkimPreCFGNode,
-}
+__all__ = ["comfy_entrypoint"]
